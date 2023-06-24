@@ -1,0 +1,210 @@
+---
+title: "organization"
+author: "Simon Weisenhorn"
+date: "2023-06-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# First Function
+
+```{r}
+recipesByCuisine = function(likedCuisine, dislikedCuisine=NULL, number=10) {
+  likedCuisine = tolower(likedCuisine)
+  dislikedCuisine = tolower(dislikedCuisine)
+  likedCuisine = paste(likedCuisine, collapse=',')
+  dislikedCuisine = paste(dislikedCuisine, collapse=',')
+  if(length(dislikedCuisine)>0){
+    recipes <- GET(paste("https://api.spoonacular.com/recipes/complexSearch?cuisine=",likedCuisine,"&excludeCuisine=",dislikedCuisine,"&number=",number,"&apiKey=f8ceed6cf4f74d56b1584d84ee70ec9b", sep=""))
+  } else {
+    recipes <- GET(paste("https://api.spoonacular.com/recipes/complexSearch?cuisine=",likedCuisine,"&number=",number,"&apiKey=f8ceed6cf4f74d56b1584d84ee70ec9b", sep=""))
+  }
+  parsed <- fromJSON(rawToChar(recipes$content))
+  recipeInfo <- parsed$results 
+  data = as_tibble(recipeInfo[,c("id", "title")])
+  data = data %>% rename(ID = id, Recipe = title)
+  return(data)
+}
+```
+
+```{r}
+recipesByCuisine(c("American", "Italian"), number=20)
+```
+
+# Second Function
+
+```{r}
+recipesByDiet = function(diet, number=10) {
+  diet = tolower(diet)
+  diet = paste(diet, collapse=',')
+  recipes <- GET(paste("https://api.spoonacular.com/recipes/complexSearch?diet=",diet,"&number=",number,"&apiKey=f8ceed6cf4f74d56b1584d84ee70ec9b", sep=""))
+  parsed <- fromJSON(rawToChar(recipes$content))
+  recipeInfo <- parsed$results 
+  data = as_tibble(recipeInfo[,c("id", "title")])
+  data = data %>% rename(ID = id, Recipe = title)
+  return(data)
+}
+```
+
+```{r}
+recipesByDiet("Vegetarian", number=20)
+```
+
+
+
+# Third Function
+
+```{r}
+recipesByIntolerances = function(intolerance, number=10) {
+  intolerance = tolower(intolerance)
+  intolerance = paste(intolerance, collapse=',')
+  recipes <- GET(paste("https://api.spoonacular.com/recipes/complexSearch?intolerances=",intolerance,"&number=",number,"&apiKey=f8ceed6cf4f74d56b1584d84ee70ec9b", sep=""))
+  parsed <- fromJSON(rawToChar(recipes$content))
+  recipeInfo <- parsed$results 
+  data = as_tibble(recipeInfo[,c("id", "title")])
+  data = data %>% rename(ID = id, Recipe = title)
+  return(data)
+}
+```
+
+```{r}
+recipesByIntolerances(c("Gluten", "Dairy", "wheat", "soy", "peanut"), number=25)
+```
+
+# Fourth Function
+
+```{r}
+ingredientsList = function(id) {
+  recipes <- GET(paste("https://api.spoonacular.com/recipes/",id,"/ingredientWidget.json?apiKey=f8ceed6cf4f74d56b1584d84ee70ec9b", sep=""))
+  parsed <- fromJSON(rawToChar(recipes$content))
+  names = parsed$ingredients$name
+  values = parsed$ingredients$amount$us$value
+  units = parsed$ingredients$amount$us$unit
+  data = data.frame(Measurements=values, Units = units, Ingredients = names)
+  return(data)
+}
+```
+
+```{r}
+ingredientsList(782585)
+```
+
+# Fifth Function
+
+
+```{r}
+recipeInstructions = function(id) {
+  recipes = GET(paste("https://api.spoonacular.com/recipes/",id,"/analyzedInstructions?apiKey=f8ceed6cf4f74d56b1584d84ee70ec9b", sep=""))
+  parsed <- fromJSON(rawToChar(recipes$content))
+  stepnum = parsed$steps[[1]]$number
+  instruction = parsed$steps[[1]]$step
+  data = data.frame(Step=stepnum, Instructions = instruction)
+  return(data)
+}
+```
+
+```{r}
+recipeInstructions(782603)
+```
+
+# Sixth Function
+
+```{r}
+equipment = function(id) {
+  recipes = GET(paste("https://api.spoonacular.com/recipes/",id,"/equipmentWidget.json?apiKey=f8ceed6cf4f74d56b1584d84ee70ec9b", sep=""))
+  parsed <- fromJSON(rawToChar(recipes$content))
+  equipment = parsed[[1]]$name
+  data = data.frame(Equipment = equipment)
+  return(data)
+}
+```
+
+```{r}
+equipment(1003464)
+```
+
+# Seventh Function
+
+```{r}
+taste = function(id, type=NULL) {
+  recipes = GET(paste("https://api.spoonacular.com/recipes/",id,"/tasteWidget.json?apiKey=f8ceed6cf4f74d56b1584d84ee70ec9b", sep=""))
+  parsed <- fromJSON(rawToChar(recipes$content))
+  data = data.frame(parsed)
+  data = data %>% mutate(ID=id) %>% select(ID, everything())
+  if (length(type)>0){
+    type = unlist(lapply(type, tolower))
+    return(data[c("ID", type)])
+  } else{
+    return(data)
+  }
+}
+```
+
+```{r}
+taste(1003464, "SWEetness")
+```
+
+
+# Eigth Function
+
+```{r}
+multipleTastes = function(foodids, type=NULL) {
+  data = data.frame()
+  for(i in 1:length(foodids)) {
+    for(j in foodids[i]){
+      data = bind_rows(data, taste(j, type=type))
+    }
+  }
+  return(data)
+}
+```
+
+```{r}
+multipleTastes(foodids=c(715424,639392))
+```
+
+
+
+# Ninth Function
+
+```{r}
+getNutrientsPerServing = function(id, type=NULL) {
+  info = GET(paste0("https://api.spoonacular.com/recipes/",id,"/information?includeNutrition=true&apiKey=f8ceed6cf4f74d56b1584d84ee70ec9b",sep=""))
+  parsed <- fromJSON(rawToChar(info$content))
+  dataframe = as.data.frame(parsed$nutrition[1])
+  dataframe = pivot_wider(dataframe[1:2], names_from=nutrients.name, values_from=nutrients.amount)
+  dataframe = dataframe %>% mutate(ID=id) %>% select(ID, everything())
+  if (length(type)>0) {
+    type = unlist(lapply(type, str_to_title))
+    return(dataframe[c("ID",type)])
+  } else{
+    return(dataframe)
+  }
+}
+```
+
+```{r}
+getNutrientsPerServing(715424)
+```
+
+# Tenth Function
+
+```{r}
+multipleNutrients = function(foodids, type=NULL) {
+  data = data.frame()
+  for(i in 1:length(foodids)) {
+    for(j in foodids[i]){
+      data = bind_rows(data, getNutrientsPerServing(j, type=type))
+    }
+  }
+  return(data)
+}
+```
+
+```{r}
+multipleNutrients(foodids=c(715424,639392))
+```
+

@@ -1,0 +1,67 @@
+---
+title: "Visualizations"
+author: "Simon Weisenhorn"
+date: "2023-06-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data Exploration
+
+```{r}
+americanRecipeIDs <- foodAPI("recipesByCuisine", "American", number=100)$ID
+```
+
+```{r}
+americanRecipeTastes = foodAPI("multipleTastes", foodids=americanRecipeIDs)
+```
+
+```{r}
+americanRecipeTastes 
+```
+
+```{r}
+americanRecipeNutrition = foodAPI("multipleNutrients", foodids=americanRecipeIDs)
+```
+
+```{r}
+americanRecipeNutrition = americanRecipeNutrition %>% 
+  mutate(proteinToCarbs=Protein/Carbohydrates)
+americanRecipeNutrition
+```
+
+```{r}
+plot(americanRecipeNutrition$Carbohydrates, americanRecipeNutrition$Calories)
+plot(americanRecipeNutrition$Sugar, americanRecipeNutrition$Calories)
+with line of best fit
+```
+
+```{r}
+plot(americanRecipeNutrition$proteinToCarbs, americanRecipeNutrition$Fat)
+```
+
+
+```{r}
+summary(americanRecipeNutrition$Sodium)
+```
+
+
+```{r}
+vegetarian
+ketogenic
+paleo
+primal
+vegan
+whole30
+
+proteinToCarbs
+or proteins to fat?
+```
+
+
+```{r}
+gluten free vs non gluten free tastes boxplot
+```
