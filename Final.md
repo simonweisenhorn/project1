@@ -1,14 +1,9 @@
----
-title: "Final"
-author: "Simon Weisenhorn"
-date: "2023-06-25"
----
+Final
+================
+Simon Weisenhorn
+2023-06-25
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r}
+``` r
 library(httr) #Here I am loading the required library for the following steps
 library(tidyverse)
 library(stringr)#str_to_title()
@@ -17,7 +12,7 @@ library(jsonlite)
 
 # First Function
 
-```{r}
+``` r
 recipesByCuisine <- function(likedCuisine, dislikedCuisine=NULL, number=10) {
   
   if((number > 100) | (number <= 0)){
@@ -50,7 +45,7 @@ recipesByCuisine <- function(likedCuisine, dislikedCuisine=NULL, number=10) {
 
 # Second Function
 
-```{r}
+``` r
 recipesByDiet <- function(diet, number=10) {
   
   if((number > 100) | (number <= 0)){
@@ -73,7 +68,7 @@ recipesByDiet <- function(diet, number=10) {
 
 # Third Function
 
-```{r}
+``` r
 recipesByIntolerances <- function(intolerance, number=10) {
   
   if((number > 100) | (number <= 0)){
@@ -96,7 +91,7 @@ recipesByIntolerances <- function(intolerance, number=10) {
 
 # Fourth Function
 
-```{r}
+``` r
 recipesByType = function(type, number=10) {
   
   if((number > 100) | (number <= 0)){
@@ -119,7 +114,7 @@ recipesByType = function(type, number=10) {
 
 # Fifth Function
 
-```{r}
+``` r
 taste <- function(id, type=NULL) {
   tastes <- GET(
     paste("https://api.spoonacular.com/recipes/",id,
@@ -139,7 +134,7 @@ taste <- function(id, type=NULL) {
 
 # Sixth Function
 
-```{r}
+``` r
 multipleTastes <- function(foodids, type=NULL) {
   data <- data.frame()
   for(i in 1:length(foodids)) {
@@ -153,7 +148,7 @@ multipleTastes <- function(foodids, type=NULL) {
 
 # Seventh Function
 
-```{r}
+``` r
 getNutrientsPerServing <- function(id, type=NULL) {
   nutrients <- GET(
     paste0("https://api.spoonacular.com/recipes/",id,
@@ -176,7 +171,7 @@ getNutrientsPerServing <- function(id, type=NULL) {
 
 # Eighth Function
 
-```{r}
+``` r
 multipleNutrients <- function(foodids, type=NULL) {
   data <- data.frame()
   for(i in 1:length(foodids)) {
@@ -190,7 +185,7 @@ multipleNutrients <- function(foodids, type=NULL) {
 
 # Ninth Function
 
-```{r}
+``` r
 ingredientsList <- function(id) {
   ingredients <- GET(
     paste("https://api.spoonacular.com/recipes/",id,
@@ -207,7 +202,7 @@ ingredientsList <- function(id) {
 
 # Tenth Function
 
-```{r}
+``` r
 equipment <- function(id) {
   equipmentData <- GET(
     paste("https://api.spoonacular.com/recipes/",id,
@@ -222,7 +217,7 @@ equipment <- function(id) {
 
 # Eleventh Function
 
-```{r}
+``` r
 recipeInstructions <- function(id) {
   instructions <- GET(
     paste("https://api.spoonacular.com/recipes/",id,
@@ -238,7 +233,7 @@ recipeInstructions <- function(id) {
 
 # Twelvth Function
 
-```{r}
+``` r
 foodAPI <- function(func, ...){
 
   if (func == "recipesByCuisine"){
@@ -284,7 +279,7 @@ foodAPI <- function(func, ...){
 
 # First Visual
 
-```{r}
+``` r
 americanRecipeNutrition <- foodAPI("multipleNutrients", 
                                    foodids=foodAPI("recipesByCuisine", 
                                                    "American", number=100)$ID)
@@ -298,9 +293,11 @@ plot1 + geom_point() + scale_color_gradient(low="blue", high="red") +
   theme(plot.title = element_text(hjust = 0.5)) 
 ```
 
+![](Final_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
 # Second Visual
 
-```{r}
+``` r
 plot2 <- ggplot(americanRecipeNutrition, aes(x=Fat, y=Calories, 
                                               color= Saturated.Fat))
 plot2 + geom_point() + scale_color_gradient(low="blue", high="red", 
@@ -311,9 +308,11 @@ plot2 + geom_point() + scale_color_gradient(low="blue", high="red",
   theme(plot.title = element_text(hjust = 0.5)) 
 ```
 
+![](Final_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
 # Third Visual
 
-```{r}
+``` r
 indianRecipeNutrition <- foodAPI("multipleNutrients", 
                                  foodids=foodAPI("recipesByCuisine", 
                                                  "Indian", number=100)$ID)
@@ -356,9 +355,16 @@ allCuisineNutrition <- bind_rows(americanRecipeNutrition,
 table(allCuisineNutrition$Cuisine, allCuisineNutrition$SodiumIndicator)
 ```
 
+    ##                
+    ##                 High Sodium Low Sodium
+    ##   American               24         76
+    ##   European               33         67
+    ##   Indian                 11         89
+    ##   Mediterranean          35         65
+
 # Fourth Visual
 
-```{r}
+``` r
 allCuisineNutrition %>% group_by(Cuisine) %>% summarise(Min = min(Calories),
                                               firstQuartile = quantile(Calories, 
                                                                        0.25),
@@ -370,9 +376,17 @@ allCuisineNutrition %>% group_by(Cuisine) %>% summarise(Min = min(Calories),
                                               stdDev = sd(Calories))
 ```
 
+    ## # A tibble: 4 × 8
+    ##   Cuisine         Min firstQuartile   Avg   Med thirdQuartile   max stdDev
+    ##   <chr>         <dbl>         <dbl> <dbl> <dbl>         <dbl> <dbl>  <dbl>
+    ## 1 American       27.3          308.  490.  449.          660. 1124.   241.
+    ## 2 European       98.5          390.  523.  479.          651. 1286.   222.
+    ## 3 Indian         53.1          256.  397.  413.          542.  877.   187.
+    ## 4 Mediterranean  95.6          359.  514.  479.          634. 1286.   216.
+
 # Fifth Visual
 
-```{r}
+``` r
 maincourseRecipeNutrition <- foodAPI("multipleNutrients", 
                                      foodids=foodAPI("recipesByType", 
                                                      "Main Course", 100)$ID)
@@ -398,9 +412,11 @@ plot3 + geom_histogram(data=subset(fullmeal, Type == 'Main Course'),
   scale_fill_discrete(name = "Meal Course")
 ```
 
+![](Final_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+
 # Sixth Visual
 
-```{r}
+``` r
 maincourseRecipeNutrition <- maincourseRecipeNutrition %>% 
   mutate(merger=seq(1:100))
 dessertRecipeNutrition <- dessertRecipeNutrition %>% 
@@ -424,9 +440,11 @@ plot4 + geom_histogram(color="black", fill="wheat", bins=20) +
                      values = c(Male = "blue", Female = "hotpink"))
 ```
 
+![](Final_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
 # Seventh Visual
 
-```{r}
+``` r
 ketoNutrients <- foodAPI("multipleNutrients", 
                          foodids=foodAPI("recipesByDiet", "Ketogenic", 
                                          number=100)$ID)
@@ -471,9 +489,11 @@ plot5 + geom_col() + labs(x = "Diet Type",
   scale_fill_discrete(name = "Diet Type")
 ```
 
+![](Final_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+
 # Eighth Visual
 
-```{r}
+``` r
 allDietNutrition <- allDietNutrition %>% mutate(proteinToFats=Protein/Fat)
 
 allDietNutrition3 <- allDietNutrition %>% group_by(Diet) %>% 
@@ -487,9 +507,11 @@ plot6 + geom_col() + labs(x = "Diet Type",
   scale_fill_discrete(name = "Diet Type")
 ```
 
+![](Final_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+
 # Nineth Visual
 
-```{r}
+``` r
 allDietNutrition %>% group_by(Diet) %>% summarise(Min = min(Calories),
                                               firstQuartile = quantile(Calories, 
                                                                        0.25),
@@ -501,9 +523,19 @@ allDietNutrition %>% group_by(Diet) %>% summarise(Min = min(Calories),
                                               stdDev = sd(Calories))
 ```
 
+    ## # A tibble: 6 × 8
+    ##   Diet          Min firstQuartile   Avg   Med thirdQuartile   max stdDev
+    ##   <chr>       <dbl>         <dbl> <dbl> <dbl>         <dbl> <dbl>  <dbl>
+    ## 1 Ketogenic    90.9          407.  557.  518.          695. 1086.   223.
+    ## 2 Pescetarian  57.9          355.  497.  479.          627. 1116.   209.
+    ## 3 Primal       53.9          192.  365.  309.          516. 1163.   228.
+    ## 4 Vegan        30.4          198.  318.  294.          439.  778.   163.
+    ## 5 Vegetarian   30.4          203.  342.  317.          455. 1029.   188.
+    ## 6 Whole30      25.0          187.  383.  358.          509. 1163.   234.
+
 # Tenth Visual
 
-```{r}
+``` r
 allDietNutrition <- allDietNutrition %>% 
   mutate(B12Indicator = case_when(Vitamin.B12 >= 1.2 ~ "High B12",
                            (Vitamin.B12 < 1.2 | is.na(Vitamin.B12)) ~ 
@@ -512,9 +544,18 @@ allDietNutrition <- allDietNutrition %>%
 table(allDietNutrition$Diet, allDietNutrition$B12Indicator)
 ```
 
+    ##              
+    ##               High B12 Low B12
+    ##   Ketogenic         53      47
+    ##   Pescetarian       80      20
+    ##   Primal            32      68
+    ##   Vegan              0     100
+    ##   Vegetarian         5      95
+    ##   Whole30           29      71
+
 # Eleventh Visual
 
-```{r, warning=FALSE}
+``` r
 glutenTastes <- foodAPI("multipleTastes", 
                         foodids=foodAPI("recipesByIntolerances", 
                                         NULL, number=100)$ID)
@@ -534,3 +575,5 @@ plot7 + geom_boxplot() + geom_point(aes(color=Type), position="jitter") +
        color="Recipe Contents") +
   theme(plot.title = element_text(hjust = 0.5)) 
 ```
+
+![](Final_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
