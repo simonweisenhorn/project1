@@ -73,14 +73,18 @@ recipesByCuisine <- function(likedCuisine, dislikedCuisine=NULL, number=10) {
   if((number > 100) | (number <= 0)){
     stop("ERROR: Argument for number must be between 0 and 100!")
   }
-  #This conditional statement is to ensure the user requests between 0 or 100 recipes, otherwise the function returns an error.
+  #This conditional statement is to ensure the user requests between 0 or 
+  #100 recipes, otherwise the function returns an error.
   
-  likedCuisine <- tolower(likedCuisine) #This converts the users input to lower case because that is required for the query
+  likedCuisine <- tolower(likedCuisine) 
+  #This converts the users input to lower case because that is required for the query
   dislikedCuisine <- tolower(dislikedCuisine)
-  likedCuisine <- paste(likedCuisine, collapse=',') #The cuisines need to be separated by commas so we use the paste function for this
+  likedCuisine <- paste(likedCuisine, collapse=',') 
+  #The cuisines need to be separated by commas so we use the paste function for this
   dislikedCuisine <- paste(dislikedCuisine, collapse=',') 
   if(length(dislikedCuisine)>0){
-    #This checks to see if disliked cuisines have been supplied and if they have been then to make sure to query out the disliked ones
+    #This checks to see if disliked cuisines have been supplied and if they 
+    #have been then to make sure to query out the disliked ones
   recipes <- GET(
     paste("https://api.spoonacular.com/recipes/complexSearch?cuisine=",
                        likedCuisine,"&excludeCuisine=",dislikedCuisine,
@@ -95,10 +99,13 @@ recipesByCuisine <- function(likedCuisine, dislikedCuisine=NULL, number=10) {
                          "&apiKey=f8ceed6cf4f74d56b1584d84ee70ec9b", sep=""))
   #Here I am utilizing the GET function to connect with the API
   }
-  parsed <- fromJSON(rawToChar(recipes$content)) #Using the fromJSON function to parse through the resulting data from the API
+  parsed <- fromJSON(rawToChar(recipes$content)) #Using the fromJSON function 
+  #to parse through the resulting data from the API
   recipeInfo <- parsed$results #Collecting the results in an object
-  data <- as_tibble(recipeInfo[,c("id", "title")]) #Creating tibble to display recipe ID and Title
-  data <- data %>% rename(ID = id, Recipe = title) #Renaming the variables for clarity
+  data <- as_tibble(recipeInfo[,c("id", "title")]) 
+  #Creating tibble to display recipe ID and Title
+  data <- data %>% rename(ID = id, Recipe = title) 
+  #Renaming the variables for clarity
   return(data) #Returning the resulting data frame
 }
 ```
@@ -117,10 +124,13 @@ recipesByDiet <- function(diet, number=10) {
   if((number > 100) | (number <= 0)){
     stop("ERROR: Argument for number must be between 0 and 100!")
   }
-  #This conditional statement is to ensure the user requests between 0 or 100 recipes, otherwise the function returns an error.
+  #This conditional statement is to ensure the user requests between 0 or 100 
+  #recipes, otherwise the function returns an error.
   
-  diet <- tolower(diet) #This converts the users input to lower case because that is required for the query
-  diet <- paste(diet, collapse=',') #The diets need to be separated by commas so we use the paste function for this
+  diet <- tolower(diet) 
+  #This converts the users input to lower case because that is required for the query
+  diet <- paste(diet, collapse=',') 
+  #The diets need to be separated by commas so we use the paste function for this
   recipes <- GET(
     paste("https://api.spoonacular.com/recipes/complexSearch?diet=",
                        diet,"&number=",number,
@@ -129,8 +139,10 @@ recipesByDiet <- function(diet, number=10) {
   parsed <- fromJSON(rawToChar(recipes$content))
   #Using the fromJSON function to parse through the resulting data from the API
   recipeInfo <- parsed$results #saving the parsed results in an object
-  data <- as_tibble(recipeInfo[,c("id", "title")]) #Creating tibble to display recipe ID and Title
-  data <- data %>% rename(ID = id, Recipe = title) #Renaming the variables for clarity
+  data <- as_tibble(recipeInfo[,c("id", "title")]) 
+  #Creating tibble to display recipe ID and Title
+  data <- data %>% rename(ID = id, Recipe = title) 
+  #Renaming the variables for clarity
   return(data) #Returning the resulting data frame
 }
 ```
@@ -149,10 +161,13 @@ recipesByIntolerances <- function(intolerance, number=10) {
   if((number > 100) | (number <= 0)){
     stop("ERROR: Argument for number must be between 0 and 100!")
   }
-  #This conditional statement is to ensure the user requests between 0 or 100 recipes, otherwise the function returns an error.
+  #This conditional statement is to ensure the user requests between 0 or 100 
+  #recipes, otherwise the function returns an error.
   
-  intolerance <- tolower(intolerance) #This converts the users input to lower case because that is required for the query
-  intolerance <- paste(intolerance, collapse=',') #The intolerances need to be separated by commas so we use the paste function for this
+  intolerance <- tolower(intolerance) 
+  #This converts the users input to lower case because that is required for the query
+  intolerance <- paste(intolerance, collapse=',') 
+  #The intolerances need to be separated by commas so we use the paste function for this
   recipes <- GET(
     paste("https://api.spoonacular.com/recipes/complexSearch?intolerances=",
           intolerance,"&number=",number,
@@ -161,8 +176,10 @@ recipesByIntolerances <- function(intolerance, number=10) {
   parsed <- fromJSON(rawToChar(recipes$content))
   #Using the fromJSON function to parse through the resulting data from the API
   recipeInfo <- parsed$results #saving the parsed results in an object
-  data <- as_tibble(recipeInfo[,c("id", "title")]) #Creating tibble to display recipe ID and Title
-  data <- data %>% rename(ID = id, Recipe = title) #Renaming the variables for clarity
+  data <- as_tibble(recipeInfo[,c("id", "title")]) 
+  #Creating tibble to display recipe ID and Title
+  data <- data %>% rename(ID = id, Recipe = title) 
+  #Renaming the variables for clarity
   return(data) #Returning the resulting data frame
 }
 ```
@@ -181,11 +198,16 @@ recipesByType = function(type, number=10) {
   if((number > 100) | (number <= 0)){
     stop("ERROR: Argument for number must be between 0 and 100!")
   }
-  #This conditional statement is to ensure the user requests between 0 or 100 recipes, otherwise the function returns an error.
+  #This conditional statement is to ensure the user requests between 0 or 100 
+  #recipes, otherwise the function returns an error.
   
-  type = tolower(type) #This converts the users input to lower case because that is required for the query
-  type = paste(type, collapse=',') #The course types need to be separated by commas so we use the paste function for this
-  type = sub(" ", "_", type) #Many of the course types had spaces so to accomodate the user, I replace them with underscores here
+  type = tolower(type) 
+  #This converts the users input to lower case because that is required for the query
+  type = paste(type, collapse=',') 
+  #The course types need to be separated by commas so we use the paste function for this
+  type = sub(" ", "_", type) 
+  #Many of the course types had spaces so to accomodate the user, 
+  #I replace them with underscores here
   recipes <- GET(
     paste("https://api.spoonacular.com/recipes/complexSearch?type=",type,
           "&number=",number,"&apiKey=f8ceed6cf4f74d56b1584d84ee70ec9b", sep=""))
@@ -193,8 +215,10 @@ recipesByType = function(type, number=10) {
   parsed <- fromJSON(rawToChar(recipes$content))
   #Using the fromJSON function to parse through the resulting data from the API
   recipeInfo <- parsed$results #saving the parsed results in an object
-  data = as_tibble(recipeInfo[,c("id", "title")]) #Creating tibble to display recipe ID and Title
-  data = data %>% rename(ID = id, Recipe = title) #Renaming the variables for clarity
+  data = as_tibble(recipeInfo[,c("id", "title")]) 
+  #Creating tibble to display recipe ID and Title
+  data = data %>% rename(ID = id, Recipe = title) 
+  #Renaming the variables for clarity
   return(data) #Returning the resulting data frame
 }
 ```
@@ -221,11 +245,14 @@ taste <- function(id, type=NULL) {
   parsed <- fromJSON(rawToChar(tastes$content))
   #Using the fromJSON function to parse through the resulting data from the API
   data <- data.frame(parsed) #Saving the parsed results as an object
-  data <- data %>% mutate(ID=id) %>% select(ID, everything()) #Capitalizing ID and moving it to the front of the data frame
+  data <- data %>% mutate(ID=id) %>% select(ID, everything()) 
+  #Capitalizing ID and moving it to the front of the data frame
   if (length(type)>0){
     #Checks if type is not null then continues...
-    type <- unlist(lapply(type, tolower)) #makes all taste types lowercase for matching
-    return(data[c("ID", type)]) #returns the ID of the recipe and only the kinds of tastes requested
+    type <- unlist(lapply(type, tolower)) 
+    #makes all taste types lowercase for matching
+    return(data[c("ID", type)]) 
+    #returns the ID of the recipe and only the kinds of tastes requested
   } else{
     return(data) #Returning the resulting data frame
   }
@@ -245,7 +272,8 @@ multipleTastes <- function(foodids, type=NULL) {
   for(i in 1:length(foodids)) {
     #The first for loop is to loop the amount of foodids that were supplied
     for(j in foodids[i]){
-      #The second for loop is to stack a dataframe with each kind of taste using the taste function created above
+      #The second for loop is to stack a dataframe with each kind of taste 
+      #using the taste function created above
       data <- bind_rows(data, taste(j, type=type))
     }
   }
@@ -272,13 +300,18 @@ getNutrientsPerServing <- function(id, type=NULL) {
   #Using the fromJSON function to parse through the resulting data from the API
   dataframe <- as.data.frame(parsed$nutrition[1]) #Retrieving the nutrition information
   dataframe <- pivot_wider(dataframe[1:2], names_from=nutrients.name, 
-                           values_from=nutrients.amount) #Making the data wide for easier viewing
-  dataframe <- dataframe %>% mutate(ID=id) %>% select(ID, everything()) #Capitalizing the ID variable and moving it to the front
-  names(dataframe) <- c(make.names(names(dataframe), unique=TRUE)) #Replacing the spaces in the variable names with periods
+                           values_from=nutrients.amount) 
+  #Making the data wide for easier viewing
+  dataframe <- dataframe %>% mutate(ID=id) %>% select(ID, everything()) 
+  #Capitalizing the ID variable and moving it to the front
+  names(dataframe) <- c(make.names(names(dataframe), unique=TRUE)) 
+  #Replacing the spaces in the variable names with periods
   if (length(type)>0) {
     #Checks to see if the user specified certain types of nutrients...
-    type <- unlist(lapply(type, str_to_title)) #Propcases the types of nutrients for matching purposes
-    return(dataframe[c("ID",type)]) #Returns the recipe IDs with only the certain kinds of nutrients requested
+    type <- unlist(lapply(type, str_to_title)) 
+    #Propcases the types of nutrients for matching purposes
+    return(dataframe[c("ID",type)]) 
+    #Returns the recipe IDs with only the certain kinds of nutrients requested
   } else{
     return(dataframe) #Returning the resulting data frame
   }
@@ -298,7 +331,8 @@ multipleNutrients <- function(foodids, type=NULL) {
   for(i in 1:length(foodids)) {
     #The first for loop is to loop the amount of foodids that were supplied
     for(j in foodids[i]){
-      #The second for loop is to stack a dataframe with each kind of nutrient using the getNutrientsPerServing function created above
+      #The second for loop is to stack a dataframe with each kind of nutrient 
+      #using the getNutrientsPerServing function created above
       data <- bind_rows(data, getNutrientsPerServing(j, type=type))
     }
   }
@@ -325,7 +359,8 @@ ingredientsList <- function(id) {
   names <- parsed$ingredients$name #Retrieves the name of the ingredient
   values <- parsed$ingredients$amount$us$value #Retrieves the amount of the ingredient
   units <- parsed$ingredients$amount$us$unit #Retrieves the unit of the ingredient
-  data <- data.frame(Measurements=values, Units = units, Ingredients = names) #Combining all ingredients and measurements into data frame
+  data <- data.frame(Measurements=values, Units = units, Ingredients = names) 
+  #Combining all ingredients and measurements into data frame
   return(data) #Returning the resulting data frame
 }
 ```
@@ -345,7 +380,8 @@ equipment <- function(id) {
   parsed <- fromJSON(rawToChar(equipmentData$content))
   #Using the fromJSON function to parse through the resulting data from the API
   equipmentList <- parsed[[1]]$name #Retrieving the names of the equipment
-  data <- data.frame(Equipment = equipmentList) #Creating dataframe and renaming names to equipment for clarity
+  data <- data.frame(Equipment = equipmentList) 
+  #Creating dataframe and renaming names to equipment for clarity
   return(data) #Returning the resulting data frame
 }
 ```
@@ -366,7 +402,8 @@ recipeInstructions <- function(id) {
   #Using the fromJSON function to parse through the resulting data from the API
   stepnum <- parsed$steps[[1]]$number #Retrieving the step number
   instructionList <- parsed$steps[[1]]$step #Retrieving the written instructions
-  data <- data.frame(Step=stepnum, Instructions = instructionList) #Creating dataframe and renaming variables for clarity
+  data <- data.frame(Step=stepnum, Instructions = instructionList) 
+  #Creating dataframe and renaming variables for clarity
   return(data) #Returning the resulting data frame
 } 
 ```
@@ -381,7 +418,8 @@ then any other arguments subsequently.
 ``` r
 foodAPI <- function(func, ...){
 
-#This is a wrapper function used to wrap all of the previous functions into one. The conditional statement checks to see what function was called and outputs accordingly.
+#This is a wrapper function used to wrap all of the previous functions into one. 
+#The conditional statement checks to see what function was called and outputs accordingly.
   
   if (func == "recipesByCuisine"){
     output <- recipesByCuisine(...)
@@ -419,7 +457,8 @@ foodAPI <- function(func, ...){
   else {
     stop("ERROR: Function argument is invalid!")
   }
-  # If the user supplied an unrecognized argument then the wrapper returns an error explaining that the function argument is invalid
+  # If the user supplied an unrecognized argument then the wrapper returns an 
+  #error explaining that the function argument is invalid
   
   return(output) #Return proper output
 }
@@ -446,14 +485,21 @@ content in most meals. I also colored each point by the amount of sugar
 content per serving since sugars are a form of carbohydrates.
 
 ``` r
-americanRecipeNutrition <- foodAPI("multipleNutrients", foodids=foodAPI("recipesByCuisine", "American", number=100)$ID)
-#Here I queried 100 American cuisine recipe IDs and fed them into the multiple nutrients call to get the full nutrients list for 100 American cuisine recipes
-plot1 <- ggplot(americanRecipeNutrition, aes(x=Carbohydrates, y=Calories, color= Sugar)) #Creating the base of the plot
+americanRecipeNutrition <- 
+  foodAPI("multipleNutrients", 
+          foodids=foodAPI("recipesByCuisine", "American", number=100)$ID)
+#Here I queried 100 American cuisine recipe IDs and fed them into the multiple 
+#nutrients call to get the full nutrients list for 100 American cuisine recipes
+plot1 <- ggplot(americanRecipeNutrition, aes(x=Carbohydrates, y=Calories, 
+                                             color= Sugar)) 
+#Creating the base of the plot
 plot1 + geom_point() + scale_color_gradient(low="blue", high="red") +
-  #Here I am adding to the plot to create a scatterplot where the points are colored by amount of sugar
+  #Here I am adding to the plot to create a scatterplot where the points 
+  #are colored by amount of sugar
   geom_smooth(method=lm, formula=y~x, color="black") +
   #Adding a line of best fit
-  labs(x = "Grams of Carbohydrates Per Serving", title = "Calories Vs Carbohydrates in American Cuisine") +
+  labs(x = "Grams of Carbohydrates Per Serving", 
+       title = "Calories Vs Carbohydrates in American Cuisine") +
   #Adding descriptive labels
   theme(plot.title = element_text(hjust = 0.5)) 
 ```
@@ -480,13 +526,18 @@ also correlated in nutrition. Let’s explore this similarly to how we did
 the previous graph with the same dataset below.
 
 ``` r
-plot2 <- ggplot(americanRecipeNutrition, aes(x=Fat, y=Calories, color= Saturated.Fat)) #Creating the base of the plot
-plot2 + geom_point() + scale_color_gradient(low="blue", high="red", name="Saturated Fat") +
-  #Here I am adding to the plot to create a scatterplot where the points are colored by amount of saturated fat
+plot2 <- ggplot(americanRecipeNutrition, aes(x=Fat, y=Calories, 
+                                             color= Saturated.Fat)) 
+#Creating the base of the plot
+plot2 + geom_point() + scale_color_gradient(low="blue", high="red", 
+                                            name="Saturated Fat") +
+  #Here I am adding to the plot to create a scatterplot where the points 
+  #are colored by amount of saturated fat
   #I am also renaming the legend for clarity
   geom_smooth(method=lm, formula=y~x, color="black") +
   #Adding a line of best fit
-  labs(x = "Grams of Fat Per Serving", title = "Calories Vs Fat in American Cuisine") +
+  labs(x = "Grams of Fat Per Serving", 
+       title = "Calories Vs Fat in American Cuisine") +
   #Adding descriptive labels
   theme(plot.title = element_text(hjust = 0.5)) 
 ```
@@ -525,42 +576,59 @@ intake, and “Low Sodium” otherwise. This should give us an interesting
 contingency table of which cuisines contain higher sodium levels.
 
 ``` r
-indianRecipeNutrition <- foodAPI("multipleNutrients", foodids=foodAPI("recipesByCuisine", "Indian", number=100)$ID)
-#Here I queried 100 Indian cuisine recipe IDs and fed them into the multiple nutrients call to get the full nutrients list for 100 Indian cuisine recipes
-europeanRecipeNutrition <- foodAPI("multipleNutrients", foodids=foodAPI("recipesByCuisine", "European", number=100)$ID)
-#Here I queried 100 European cuisine recipe IDs and fed them into the multiple nutrients call to get the full nutrients list for 100 European cuisine recipes
-mediterraneanRecipeNutrition <- foodAPI("multipleNutrients", foodids=foodAPI("recipesByCuisine", "Mediterranean", number=100)$ID)
-#Here I queried 100 Mediterranean cuisine recipe IDs and fed them into the multiple nutrients call to get the full nutrients list for 100 Mediterranean cuisine recipes
+indianRecipeNutrition <- foodAPI("multipleNutrients", 
+                                 foodids=foodAPI("recipesByCuisine", 
+                                                 "Indian", number=100)$ID)
+#Here I queried 100 Indian cuisine recipe IDs and fed them into the multiple 
+#nutrients call to get the full nutrients list for 100 Indian cuisine recipes
+europeanRecipeNutrition <- foodAPI("multipleNutrients", 
+                                   foodids=foodAPI("recipesByCuisine", 
+                                                   "European", number=100)$ID)
+#Here I queried 100 European cuisine recipe IDs and fed them into the 
+#multiple nutrients call to get the full nutrients list for 100 European 
+#cuisine recipes
+mediterraneanRecipeNutrition <- foodAPI("multipleNutrients", 
+                                        foodids=foodAPI("recipesByCuisine", 
+                                                        "Mediterranean", 
+                                                        number=100)$ID)
+#Here I queried 100 Mediterranean cuisine recipe IDs and fed them into 
+#the multiple nutrients call to get the full nutrients list for 100 
+#Mediterranean cuisine recipes
 
 americanRecipeNutrition <- americanRecipeNutrition %>% 
   mutate(SodiumIndicator = case_when(Sodium >= 1150 ~ "High Sodium", 
                                      Sodium < 1150 ~ "Low Sodium"), 
          Cuisine = "American")
-#Here I am creating two new categorical indicator variables for the sodium amount and type of cuisine
+#Here I am creating two new categorical indicator variables for the 
+#sodium amount and type of cuisine
 
 indianRecipeNutrition <- indianRecipeNutrition %>% 
   mutate(SodiumIndicator = case_when(Sodium >= 1150 ~ "High Sodium", 
                                      Sodium < 1150 ~ "Low Sodium"), 
          Cuisine = "Indian")
-#Here I am creating two new categorical indicator variables for the sodium amount and type of cuisine
+#Here I am creating two new categorical indicator variables for the 
+#sodium amount and type of cuisine
 
 europeanRecipeNutrition <- europeanRecipeNutrition %>% 
   mutate(SodiumIndicator = case_when(Sodium >= 1150 ~ "High Sodium", 
                                      Sodium < 1150 ~ "Low Sodium"), 
          Cuisine = "European")
-#Here I am creating two new categorical indicator variables for the sodium amount and type of cuisine
+#Here I am creating two new categorical indicator variables for the 
+#sodium amount and type of cuisine
 
 mediterraneanRecipeNutrition <- mediterraneanRecipeNutrition %>% 
   mutate(SodiumIndicator = case_when(Sodium >= 1150 ~ "High Sodium", 
                                      Sodium < 1150 ~ "Low Sodium"), 
          Cuisine = "Mediterranean")
-#Here I am creating two new categorical indicator variables for the sodium amount and type of cuisine
+#Here I am creating two new categorical indicator variables for the 
+#sodium amount and type of cuisine
 
 allCuisineNutrition <- bind_rows(americanRecipeNutrition, 
                                  indianRecipeNutrition, 
                                  europeanRecipeNutrition, 
                                  mediterraneanRecipeNutrition)
-#Here I am stacking all of the cuisine nutrition information on top of each other
+#Here I am stacking all of the cuisine nutrition information on top of 
+#each other
 
 table(allCuisineNutrition$Cuisine, allCuisineNutrition$SodiumIndicator)
 ```
@@ -591,10 +659,12 @@ the different cuisines. The results are shown below.
 
 ``` r
 allCuisineNutrition %>% group_by(Cuisine) %>% summarise(Min = min(Calories),
-                                              firstQuartile = quantile(Calories, 0.25),
+                                              firstQuartile = quantile(Calories, 
+                                                                       0.25),
                                               Avg=mean(Calories),
                                               Med=median(Calories),
-                                              thirdQuartile = quantile(Calories, 0.75),
+                                              thirdQuartile = quantile(Calories, 
+                                                                       0.75),
                                               max = max(Calories),
                                               stdDev = sd(Calories))
 ```
@@ -608,7 +678,8 @@ allCuisineNutrition %>% group_by(Cuisine) %>% summarise(Min = min(Calories),
     ## 4 Mediterranean  95.6          359.  514.  479.          634. 1286.   216.
 
 ``` r
-#This chunk is to create a tibble of the numerical summary of calories across different types of cuisines
+#This chunk is to create a tibble of the numerical summary of calories across 
+#different types of cuisines
 ```
 
 Again, surprisingly, the average, median, and max amount of calories per
@@ -632,23 +703,36 @@ IDs and nutrients, but now I am using `recipesByType` instead of
 cuisine.
 
 ``` r
-maincourseRecipeNutrition <- foodAPI("multipleNutrients", foodids=foodAPI("recipesByType", "Main Course", 100)$ID)
-#Here I queried 100 main course recipe IDs and fed them into the multiple nutrients call to get the full nutrients list for 100 main course recipes
-dessertRecipeNutrition <- foodAPI("multipleNutrients", foodids=foodAPI("recipesByType", "Dessert", 100)$ID)
-#Here I queried 100 dessert recipe IDs and fed them into the multiple nutrients call to get the full nutrients list for 100 dessert recipes
+maincourseRecipeNutrition <- foodAPI("multipleNutrients", 
+                                     foodids=foodAPI("recipesByType", 
+                                                     "Main Course", 100)$ID)
+#Here I queried 100 main course recipe IDs and fed them into the multiple 
+#nutrients call to get the full nutrients list for 100 main course recipes
+dessertRecipeNutrition <- foodAPI("multipleNutrients", 
+                                  foodids=foodAPI("recipesByType", 
+                                                  "Dessert", 100)$ID)
+#Here I queried 100 dessert recipe IDs and fed them into the multiple nutrients 
+#call to get the full nutrients list for 100 dessert recipes
 
-maincourseRecipeNutrition <- maincourseRecipeNutrition %>% mutate(Type="Main Course")
+maincourseRecipeNutrition <- maincourseRecipeNutrition %>% 
+  mutate(Type="Main Course")
 #Creating indicator variable for type of course before stacking the data
 dessertRecipeNutrition <- dessertRecipeNutrition %>% mutate(Type="Dessert")
 
-fullmeal <- bind_rows(maincourseRecipeNutrition, dessertRecipeNutrition) #Stacking the data on top of each other
+fullmeal <- bind_rows(maincourseRecipeNutrition, dessertRecipeNutrition) 
+#Stacking the data on top of each other
 
-plot3 <- ggplot(fullmeal, aes(x=Calories, fill=Type)) #Creating the base of the plot
-plot3 + geom_histogram(data=subset(fullmeal, Type == 'Main Course'), bins=20, alpha = 0.75) +
-  #Adding the first histogram layer for the amount of calories in a main course meal
-  geom_histogram(data=subset(fullmeal, Type == 'Dessert'), bins=20, alpha = 0.75) +
+plot3 <- ggplot(fullmeal, aes(x=Calories, fill=Type)) 
+#Creating the base of the plot
+plot3 + geom_histogram(data=subset(fullmeal, Type == 'Main Course'), 
+                       bins=20, alpha = 0.75) +
+  #Adding the first histogram layer for the amount of calories in a 
+  #main course meal
+  geom_histogram(data=subset(fullmeal, Type == 'Dessert'), bins=20, 
+                 alpha = 0.75) +
   #Adding the second histogram layer for the amount of calories in a dessert
-  labs(x = "Calories Per Serving", y = "Frequency", title = "Histogram of Calories Per Serving") +
+  labs(x = "Calories Per Serving", y = "Frequency", 
+       title = "Histogram of Calories Per Serving") +
   #Adding descriptive labels
   theme(plot.title = element_text(hjust = 0.5)) +
   #Centering the title
@@ -694,15 +778,18 @@ totalMeal <- inner_join(maincourseRecipeNutrition,
 #Merging the recipes together by the common variable created above
 
 totalMeal <- totalMeal %>% mutate(totCalories=Calories.x+Calories.y) 
-#Adding the calories from a random main course meal with a random dessert to get the total calories
+#Adding the calories from a random main course meal with a random dessert 
+#to get the total calories
 
 plot4 <- ggplot(totalMeal, aes(x=totCalories)) #Creating the base of the plot
 plot4 + geom_histogram(color="black", fill="wheat", bins=20) +
   #Adding a histogram layer for total calories
   geom_vline(aes(xintercept=1250, color="Male"), linetype="dashed", size=1) + 
-  #Adding a vertical line at 1250 calories to represent the half way mark for recommended daily calories for men
+  #Adding a vertical line at 1250 calories to represent the half way mark for 
+  #recommended daily calories for men
   geom_vline(aes(xintercept=1000, color="Female"), linetype="dashed", size=1) +
-  #Adding a vertical line at 1000 calories to represent the half way mark for recommended daily calories for women
+  #Adding a vertical line at 1000 calories to represent the half way mark for 
+  #recommended daily calories for women
   labs(x = "Total Calories Per Meal Serving", y = "Frequency", 
        title = "Histogram of Total Calories Per One Serving of Main Course and 
        One Serving of Dessert") +
@@ -750,18 +837,36 @@ ratio of proteins to carbs for each recipe type across the six different
 diet plans. I then created a bar graph to visualize the differences.
 
 ``` r
-ketoNutrients <- foodAPI("multipleNutrients", foodids=foodAPI("recipesByDiet", "Ketogenic", number=100)$ID)
-#Here I queried 100 ketogenic recipe IDs and fed them into the multiple nutrients call to get the full nutrients list for 100 ketogenic recipes
-vegetarianNutrients <- foodAPI("multipleNutrients", foodids=foodAPI("recipesByDiet", "Vegetarian", number=100)$ID)
-#Here I queried 100 vegetarian recipe IDs and fed them into the multiple nutrients call to get the full nutrients list for 100 vegetarian recipes
-veganNutrients <- foodAPI("multipleNutrients", foodids=foodAPI("recipesByDiet", "Vegan", number=100)$ID)
-#Here I queried 100 vegan recipe IDs and fed them into the multiple nutrients call to get the full nutrients list for 100 vegan recipes
-pescetarianNutrients <- foodAPI("multipleNutrients", foodids=foodAPI("recipesByDiet", "Pescetarian", number=100)$ID)
-#Here I queried 100 pescetarian recipe IDs and fed them into the multiple nutrients call to get the full nutrients list for 100 pescetarian recipes
-primalNutrients <- foodAPI("multipleNutrients", foodids=foodAPI("recipesByDiet", "Primal", number=100)$ID)
-#Here I queried 100 primal recipe IDs and fed them into the multiple nutrients call to get the full nutrients list for 100 primal recipes
-whole30Nutrients <- foodAPI("multipleNutrients", foodids=foodAPI("recipesByDiet", "Whole30", number=100)$ID)
-#Here I queried 100 whole30 recipe IDs and fed them into the multiple nutrients call to get the full nutrients list for 100 whole30 recipes
+ketoNutrients <- foodAPI("multipleNutrients", 
+                         foodids=foodAPI("recipesByDiet", "Ketogenic", 
+                                         number=100)$ID)
+#Here I queried 100 ketogenic recipe IDs and fed them into the multiple 
+#nutrients call to get the full nutrients list for 100 ketogenic recipes
+vegetarianNutrients <- foodAPI("multipleNutrients", 
+                               foodids=foodAPI("recipesByDiet", "Vegetarian", 
+                                               number=100)$ID)
+#Here I queried 100 vegetarian recipe IDs and fed them into the multiple 
+#nutrients call to get the full nutrients list for 100 vegetarian recipes
+veganNutrients <- foodAPI("multipleNutrients", 
+                          foodids=foodAPI("recipesByDiet", "Vegan", 
+                                          number=100)$ID)
+#Here I queried 100 vegan recipe IDs and fed them into the multiple 
+#nutrients call to get the full nutrients list for 100 vegan recipes
+pescetarianNutrients <- foodAPI("multipleNutrients", 
+                                foodids=foodAPI("recipesByDiet", 
+                                                "Pescetarian", number=100)$ID)
+#Here I queried 100 pescetarian recipe IDs and fed them into the multiple 
+#nutrients call to get the full nutrients list for 100 pescetarian recipes
+primalNutrients <- foodAPI("multipleNutrients", 
+                           foodids=foodAPI("recipesByDiet", "Primal", 
+                                           number=100)$ID)
+#Here I queried 100 primal recipe IDs and fed them into the multiple 
+#nutrients call to get the full nutrients list for 100 primal recipes
+whole30Nutrients <- foodAPI("multipleNutrients", 
+                            foodids=foodAPI("recipesByDiet", "Whole30", 
+                                            number=100)$ID)
+#Here I queried 100 whole30 recipe IDs and fed them into the multiple 
+#nutrients call to get the full nutrients list for 100 whole30 recipes
 
 ketoNutrients <- ketoNutrients %>% mutate(Diet = "Ketogenic")
 vegetarianNutrients <- vegetarianNutrients %>% mutate(Diet = "Vegetarian")
@@ -769,19 +874,25 @@ veganNutrients <- veganNutrients %>% mutate(Diet = "Vegan")
 pescetarianNutrients <- pescetarianNutrients %>% mutate(Diet = "Pescetarian")
 primalNutrients <- primalNutrients %>% mutate(Diet = "Primal")
 whole30Nutrients <- whole30Nutrients %>% mutate(Diet = "Whole30")
-#Here I am creating a new categorical indicator variable for the type of diet before I stack the data frames
+#Here I am creating a new categorical indicator variable for the type of 
+#diet before I stack the data frames
 
 allDietNutrition <- bind_rows(ketoNutrients, vegetarianNutrients, 
                               veganNutrients, pescetarianNutrients, 
-                              primalNutrients, whole30Nutrients) #Here I am stacking all of the data frames
+                              primalNutrients, whole30Nutrients) 
+#Here I am stacking all of the data frames
 
-allDietNutrition <- allDietNutrition %>% mutate(proteinToCarbs=Protein/Carbohydrates) 
+allDietNutrition <- allDietNutrition %>% 
+  mutate(proteinToCarbs=Protein/Carbohydrates) 
 #Creating new protein to carbohydrate ratio variable
 
-allDietNutrition2 <- allDietNutrition %>% group_by(Diet) %>% summarise(avgProteinToCarbs = mean(proteinToCarbs)) 
-#Creating new data frame that takes the average of each proteinToCarbs observation per diet type
+allDietNutrition2 <- allDietNutrition %>% group_by(Diet) %>% 
+  summarise(avgProteinToCarbs = mean(proteinToCarbs)) 
+#Creating new data frame that takes the average of each proteinToCarbs 
+#observation per diet type
 
-plot5 <- ggplot(allDietNutrition2, aes(x=Diet, y=avgProteinToCarbs, fill=Diet)) #Creating the base of the plot
+plot5 <- ggplot(allDietNutrition2, aes(x=Diet, y=avgProteinToCarbs, fill=Diet)) 
+#Creating the base of the plot
 #geom_col is used for the bar graph output
 plot5 + geom_col() + labs(x = "Diet Type", 
                           y = "Average Ratio of Proteins to Carbs (Grams)",
@@ -814,10 +925,13 @@ diet plans. I then created a bar graph to visualize the differences.
 allDietNutrition <- allDietNutrition %>% mutate(proteinToFats=Protein/Fat)
 #Creating new protein to fat ratio variable
 
-allDietNutrition3 <- allDietNutrition %>% group_by(Diet) %>% summarise(avgProteinToFats = mean(proteinToFats)) 
-#Creating new data frame that takes the average of each proteinToFats observation per diet type
+allDietNutrition3 <- allDietNutrition %>% group_by(Diet) %>% 
+  summarise(avgProteinToFats = mean(proteinToFats)) 
+#Creating new data frame that takes the average of each proteinToFats 
+#observation per diet type
 
-plot6 <- ggplot(allDietNutrition3, aes(x=Diet, y=avgProteinToFats, fill=Diet)) #Creating the base of the plot
+plot6 <- ggplot(allDietNutrition3, aes(x=Diet, y=avgProteinToFats, fill=Diet)) 
+#Creating the base of the plot
 #geom_col is used for the bar graph output
 plot6 + geom_col() + labs(x = "Diet Type", 
                           y = "Average Ratio of Proteins to Fats (Grams)",
@@ -846,10 +960,12 @@ across different diets below.
 
 ``` r
 allDietNutrition %>% group_by(Diet) %>% summarise(Min = min(Calories),
-                                              firstQuartile = quantile(Calories, 0.25),
+                                              firstQuartile = quantile(Calories, 
+                                                                       0.25),
                                               Avg=mean(Calories),
                                               Med=median(Calories),
-                                              thirdQuartile = quantile(Calories, 0.75),
+                                              thirdQuartile = quantile(Calories, 
+                                                                       0.75),
                                               max = max(Calories),
                                               stdDev = sd(Calories))
 ```
@@ -865,7 +981,8 @@ allDietNutrition %>% group_by(Diet) %>% summarise(Min = min(Calories),
     ## 6 Whole30      25.0          187.  383.  358.          509. 1163.   234.
 
 ``` r
-#This chunk is to create a tibble of the numerical summary of calories across different types of diets
+#This chunk is to create a tibble of the numerical summary of calories across 
+#different types of diets
 ```
 
 Based on the tibble above, it is evident that vegan and vegatarians
@@ -939,10 +1056,17 @@ to show how sweetness differs between recipes with gluten and recipes
 without gluten.
 
 ``` r
-glutenTastes <- foodAPI("multipleTastes", foodids=foodAPI("recipesByIntolerances", NULL, number=100)$ID)
-#Here I queried 100 recipe IDs with no intolerance specified and fed them into the multiple nutrients call to get the full nutrients list for 100 recipes that do not have a food intolerance specified
-glutenFreeTastes <- foodAPI("multipleTastes", foodids=foodAPI("recipesByIntolerances", "Gluten", number=100)$ID)
-#Here I queried 100 gluten free recipe IDs and fed them into the multiple nutrients call to get the full nutrients list for 100 gluten free recipes
+glutenTastes <- foodAPI("multipleTastes", 
+                        foodids=foodAPI("recipesByIntolerances", NULL, 
+                                        number=100)$ID)
+#Here I queried 100 recipe IDs with no intolerance specified and fed them into 
+#the multiple nutrients call to get the full nutrients list for 100 recipes 
+#that do not have a food intolerance specified
+glutenFreeTastes <- foodAPI("multipleTastes", 
+                            foodids=foodAPI("recipesByIntolerances", "Gluten", 
+                                            number=100)$ID)
+#Here I queried 100 gluten free recipe IDs and fed them into the multiple 
+#nutrients call to get the full nutrients list for 100 gluten free recipes
 
 glutenTastes <- glutenTastes %>% mutate(Type = "Gluten") 
 #Creating categorical indicator variable for type of recipe before stacking the data
